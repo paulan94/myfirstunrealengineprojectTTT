@@ -20,11 +20,24 @@ class AMyProjectBlockGrid : public AActor
 	UPROPERTY(Category = Grid, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UTextRenderComponent* ScoreText;
 
+	/** Text component for the score */
+	UPROPERTY(Category = Grid, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UTextRenderComponent* PlayerTurnText;
+
 public:
 	AMyProjectBlockGrid();
 
 	/** How many blocks have been clicked */
 	int32 Score;
+
+	//PAN CHANGE
+	int32 P1Score;
+	int32 P2Score;
+
+	bool BP1Turn;
+	bool BP2Turn;
+
+	//END PAN CHANGE;
 
 	/** Number of blocks along each side of grid */
 	UPROPERTY(Category=Grid, EditAnywhere, BlueprintReadOnly)
@@ -48,6 +61,9 @@ public:
 	FORCEINLINE class USceneComponent* GetDummyRoot() const { return DummyRoot; }
 	/** Returns ScoreText subobject **/
 	FORCEINLINE class UTextRenderComponent* GetScoreText() const { return ScoreText; }
+
+	/** Returns PlayerTurnText subobject **/
+	FORCEINLINE class UTextRenderComponent* GetPlayerTurnText() const { return PlayerTurnText; }
 };
 
 
