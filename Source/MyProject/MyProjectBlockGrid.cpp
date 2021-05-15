@@ -46,6 +46,7 @@ void AMyProjectBlockGrid::BeginPlay()
 
 	int32 x = 3; //todo change how this is 
 	int32 y = 3;
+	int32 BlockIndex = 0;
 
 	//new loop to spawn each block
 	for (int32 BlockX = 0; BlockX < x; BlockX++)
@@ -53,8 +54,9 @@ void AMyProjectBlockGrid::BeginPlay()
 
 		for (int32 BlockY = 0; BlockY < y; BlockY++) {
 
-			const float XOffset = ((BlockX+1*BlockY+1)/ Size) * BlockSpacing; // Divide by dimension
-			const float YOffset = ((BlockX + 1 * BlockY + 1) % Size) * BlockSpacing; // Modulo gives remainder
+			//TODO: fix this logic, +1+1 for blockx&y is not correct.
+			const float XOffset = (BlockIndex / Size) * BlockSpacing; // Divide by dimension
+			const float YOffset = (BlockIndex % Size) * BlockSpacing; // Modulo gives remainder
 
 			// Make position vector, offset from Grid location
 			const FVector BlockLocation = FVector(XOffset, YOffset, 0.f) + GetActorLocation();
@@ -75,6 +77,7 @@ void AMyProjectBlockGrid::BeginPlay()
 			{
 				NewBlock->OwningGrid = this;
 			}
+			BlockIndex++;
 		}
 	}
 
