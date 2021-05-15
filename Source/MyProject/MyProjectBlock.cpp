@@ -16,11 +16,13 @@ AMyProjectBlock::AMyProjectBlock()
 		ConstructorHelpers::FObjectFinderOptional<UMaterial> BaseMaterial;
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> BlueMaterial;
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> OrangeMaterial;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> RedMaterial;
 		FConstructorStatics()
 			: PlaneMesh(TEXT("/Game/Puzzle/Meshes/PuzzleCube.PuzzleCube"))
 			, BaseMaterial(TEXT("/Game/Puzzle/Meshes/BaseMaterial.BaseMaterial"))
 			, BlueMaterial(TEXT("/Game/Puzzle/Meshes/BlueMaterial.BlueMaterial"))
 			, OrangeMaterial(TEXT("/Game/Puzzle/Meshes/OrangeMaterial.OrangeMaterial"))
+			, RedMaterial(TEXT("/Game/Puzzle/Meshes/RedMaterial.RedMaterial"))
 		{
 		}
 	};
@@ -44,6 +46,7 @@ AMyProjectBlock::AMyProjectBlock()
 	BaseMaterial = ConstructorStatics.BaseMaterial.Get();
 	BlueMaterial = ConstructorStatics.BlueMaterial.Get();
 	OrangeMaterial = ConstructorStatics.OrangeMaterial.Get();
+	RedMaterial = ConstructorStatics.RedMaterial.Get();
 }
 
 void AMyProjectBlock::BlockClicked(UPrimitiveComponent* ClickedComp, FKey ButtonClicked)
@@ -59,18 +62,26 @@ void AMyProjectBlock::OnFingerPressedBlock(ETouchIndex::Type FingerIndex, UPrimi
 
 void AMyProjectBlock::HandleClicked()
 {
+	//TODO: update grid when clicked
+
 	// Check we are not already active
 	if (!bIsActive)
 	{
 		bIsActive = true;
 
-		// Change material
-		BlockMesh->SetMaterial(0, OrangeMaterial);
+		if (OwningGrid->BP1Turn) {
+			// Change material
+			BlockMesh->SetMaterial(0, OrangeMaterial);
+		}
+		else if (OwningGrid->BP2Turn) {
+			// Change material
+			BlockMesh->SetMaterial(0, RedMaterial);
+		}
 
 		// Tell the Grid
 		if (OwningGrid != nullptr)
 		{
-			OwningGrid->AddScore();
+			OwningGrid->HandleTurn();
 		}
 	}
 }

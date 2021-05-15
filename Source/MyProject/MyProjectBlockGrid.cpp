@@ -26,9 +26,11 @@ AMyProjectBlockGrid::AMyProjectBlockGrid()
 	PlayerTurnText->SetText(FText::Format(LOCTEXT("ScoreFmt", "Player 1 Turn: {0}"), BP1Turn));
 	PlayerTurnText->SetupAttachment(DummyRoot);
 
-	// Set defaults
+	// Set defaults *dont change Size for tictactoe
 	Size = 3;
 	BlockSpacing = 300.f;
+
+	//create grid
 }
 
 
@@ -42,43 +44,98 @@ void AMyProjectBlockGrid::BeginPlay()
 	BP1Turn = true;
 	BP2Turn = false;
 
-	// Loop to spawn each block
-	for(int32 BlockIndex=0; BlockIndex<NumBlocks; BlockIndex++)
+	int32 x = 3; //todo change how this is 
+	int32 y = 3;
+
+	//new loop to spawn each block
+	for (int32 BlockX = 0; BlockX < x; BlockX++)
 	{
-		const float XOffset = (BlockIndex/Size) * BlockSpacing; // Divide by dimension
-		const float YOffset = (BlockIndex%Size) * BlockSpacing; // Modulo gives remainder
 
-		// Make position vector, offset from Grid location
-		const FVector BlockLocation = FVector(XOffset, YOffset, 0.f) + GetActorLocation();
+		for (int32 BlockY = 0; BlockY < y; BlockY++) {
 
-		// Spawn a block
-		AMyProjectBlock* NewBlock = GetWorld()->SpawnActor<AMyProjectBlock>(BlockLocation, FRotator(0,0,0));
+			const float XOffset = ((BlockX+1*BlockY+1)/ Size) * BlockSpacing; // Divide by dimension
+			const float YOffset = ((BlockX + 1 * BlockY + 1) % Size) * BlockSpacing; // Modulo gives remainder
 
-		// Tell the block about its owner
-		if (NewBlock != nullptr)
-		{
-			NewBlock->OwningGrid = this;
+			// Make position vector, offset from Grid location
+			const FVector BlockLocation = FVector(XOffset, YOffset, 0.f) + GetActorLocation();
+
+			UE_LOG(LogTemp, Warning, TEXT("I just started running %s"), *BlockLocation.ToString());
+
+			// Spawn a block
+			AMyProjectBlock* NewBlock = GetWorld()->SpawnActor<AMyProjectBlock>(BlockLocation, FRotator(0, 0, 0));
+
+			NewBlock->xVal = BlockX;
+			NewBlock->yVal = BlockY;
+
+			UE_LOG(LogClass, Log, TEXT("My X Value: %d"), NewBlock->xVal);
+			UE_LOG(LogClass, Log, TEXT("My Y Value: %d"), NewBlock->yVal);
+
+			// Tell the block about its owner
+			if (NewBlock != nullptr)
+			{
+				NewBlock->OwningGrid = this;
+			}
 		}
 	}
+
+	//// Loop to spawn each block
+	//for(int32 BlockIndex=0; BlockIndex<NumBlocks; BlockIndex++)
+	//{
+	//	const float XOffset = (BlockIndex/Size) * BlockSpacing; // Divide by dimension
+	//	const float YOffset = (BlockIndex%Size) * BlockSpacing; // Modulo gives remainder
+
+	//	// Make position vector, offset from Grid location
+	//	const FVector BlockLocation = FVector(XOffset, YOffset, 0.f) + GetActorLocation();
+
+	//	UE_LOG(LogTemp, Warning, TEXT("I just started running %s"), *BlockLocation.ToString());
+	//
+
+	//	// Spawn a block
+	//	AMyProjectBlock* NewBlock = GetWorld()->SpawnActor<AMyProjectBlock>(BlockLocation, FRotator(0,0,0));
+
+	//	NewBlock->xVal = x;
+	//	NewBlock->yVal = y;
+
+	//	//TODO: add before updating x vals
+	//	//GridBlocks.Add(NewBlock);
+
+	//	//logic to change x, y vals
+
+
+
+	//	// Tell the block about its owner
+	//	if (NewBlock != nullptr)
+	//	{
+	//		NewBlock->OwningGrid = this;
+	//	}
+	//}
 }
 
 
-void AMyProjectBlockGrid::AddScore()
+void AMyProjectBlockGrid::HandleTurn()
 {
 	// Increment score
 	Score++;
 
 	// Update text
 	ScoreText->SetText(FText::Format(LOCTEXT("ScoreFmt", "Score: {0}"), FText::AsNumber(Score)));
-	PlayerTurnText->SetText(FText::Format(LOCTEXT("ScoreFmt", "Player 1 Turn: {0}"), BP1Turn));
 	if (BP1Turn) {
 		BP1Turn = false;
 		BP2Turn = true;
+		PlayerTurnText->SetText(FText::FromString("Player 1's Turn"));
 	}
 	else {
 		BP1Turn = true;
 		BP2Turn = false;
+		PlayerTurnText->SetText(FText::FromString("Player 2's Turn"));
 	}
+
+	CheckGameEnd();
+}
+
+void AMyProjectBlockGrid::CheckGameEnd()
+{
+
 }
 
 #undef LOCTEXT_NAMESPACE

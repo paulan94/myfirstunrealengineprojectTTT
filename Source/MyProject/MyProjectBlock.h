@@ -26,6 +26,10 @@ public:
 	/** Are we currently active? */
 	bool bIsActive;
 
+	//PAN CHANGES
+	int32 xVal;
+	int32 yVal;
+
 	/** Pointer to white material used on the focused block */
 	UPROPERTY()
 	class UMaterial* BaseMaterial;
@@ -37,6 +41,10 @@ public:
 	/** Pointer to orange material used on active blocks */
 	UPROPERTY()
 	class UMaterialInstance* OrangeMaterial;
+
+	/** Pointer to red material used on active blocks */
+	UPROPERTY()
+	class UMaterialInstance* RedMaterial;
 
 	/** Grid that owns us */
 	UPROPERTY()
@@ -53,6 +61,7 @@ public:
 	void HandleClicked();
 
 	void Highlight(bool bOn);
+
 
 public:
 	/** Returns DummyRoot subobject **/

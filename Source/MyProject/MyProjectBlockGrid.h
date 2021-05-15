@@ -37,6 +37,8 @@ public:
 	bool BP1Turn;
 	bool BP2Turn;
 
+	//grid
+
 	//END PAN CHANGE;
 
 	/** Number of blocks along each side of grid */
@@ -55,7 +57,10 @@ protected:
 public:
 
 	/** Handle the block being clicked */
-	void AddScore();
+	void HandleTurn();
+
+	/** Check game end */
+	void CheckGameEnd();
 
 	/** Returns DummyRoot subobject **/
 	FORCEINLINE class USceneComponent* GetDummyRoot() const { return DummyRoot; }
