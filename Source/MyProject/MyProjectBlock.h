@@ -20,6 +20,11 @@ class AMyProjectBlock : public AActor
 	UPROPERTY(Category = Block, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* BlockMesh;
 
+protected:
+	
+	UFUNCTION()
+	void SpawnOX(bool bIsO, FVector Loc, FRotator Rot);
+
 public:
 	AMyProjectBlock();
 
@@ -29,6 +34,12 @@ public:
 	//PAN CHANGES
 	int32 xVal;
 	int32 yVal;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
+	TSubclassOf<AActor> OPieceActorToSpawn;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
+	TSubclassOf<AActor> XPieceActorToSpawn;
 
 	/** Pointer to white material used on the focused block */
 	UPROPERTY()
@@ -45,6 +56,8 @@ public:
 	/** Pointer to red material used on active blocks */
 	UPROPERTY()
 	class UMaterialInstance* RedMaterial;
+
+	//spawn actor 
 
 	/** Grid that owns us */
 	UPROPERTY()

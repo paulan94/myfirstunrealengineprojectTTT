@@ -23,7 +23,7 @@ AMyProjectBlockGrid::AMyProjectBlockGrid()
 	PlayerTurnText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("PlayerTurnText0"));
 	PlayerTurnText->SetRelativeLocation(FVector(250.0f, 0.f, 0.f));
 	PlayerTurnText->SetRelativeRotation(FRotator(90.f, 0.f, 0.f));
-	PlayerTurnText->SetText(FText::Format(LOCTEXT("ScoreFmt", "Player 1 Turn: {0}"), BP1Turn));
+	PlayerTurnText->SetText(FText::FromString("Player 1's Turn"));
 	PlayerTurnText->SetupAttachment(DummyRoot);
 
 	// Set defaults *dont change Size for tictactoe
@@ -54,7 +54,6 @@ void AMyProjectBlockGrid::BeginPlay()
 
 		for (int32 BlockY = 0; BlockY < y; BlockY++) {
 
-			//TODO: fix this logic, +1+1 for blockx&y is not correct.
 			const float XOffset = (BlockIndex / Size) * BlockSpacing; // Divide by dimension
 			const float YOffset = (BlockIndex % Size) * BlockSpacing; // Modulo gives remainder
 
@@ -80,38 +79,6 @@ void AMyProjectBlockGrid::BeginPlay()
 			BlockIndex++;
 		}
 	}
-
-	//// Loop to spawn each block
-	//for(int32 BlockIndex=0; BlockIndex<NumBlocks; BlockIndex++)
-	//{
-	//	const float XOffset = (BlockIndex/Size) * BlockSpacing; // Divide by dimension
-	//	const float YOffset = (BlockIndex%Size) * BlockSpacing; // Modulo gives remainder
-
-	//	// Make position vector, offset from Grid location
-	//	const FVector BlockLocation = FVector(XOffset, YOffset, 0.f) + GetActorLocation();
-
-	//	UE_LOG(LogTemp, Warning, TEXT("I just started running %s"), *BlockLocation.ToString());
-	//
-
-	//	// Spawn a block
-	//	AMyProjectBlock* NewBlock = GetWorld()->SpawnActor<AMyProjectBlock>(BlockLocation, FRotator(0,0,0));
-
-	//	NewBlock->xVal = x;
-	//	NewBlock->yVal = y;
-
-	//	//TODO: add before updating x vals
-	//	//GridBlocks.Add(NewBlock);
-
-	//	//logic to change x, y vals
-
-
-
-	//	// Tell the block about its owner
-	//	if (NewBlock != nullptr)
-	//	{
-	//		NewBlock->OwningGrid = this;
-	//	}
-	//}
 }
 
 
@@ -125,12 +92,12 @@ void AMyProjectBlockGrid::HandleTurn()
 	if (BP1Turn) {
 		BP1Turn = false;
 		BP2Turn = true;
-		PlayerTurnText->SetText(FText::FromString("Player 1's Turn"));
+		PlayerTurnText->SetText(FText::FromString("Player 2's Turn"));
 	}
 	else {
 		BP1Turn = true;
 		BP2Turn = false;
-		PlayerTurnText->SetText(FText::FromString("Player 2's Turn"));
+		PlayerTurnText->SetText(FText::FromString("Player 1's Turn"));
 	}
 
 	CheckGameEnd();

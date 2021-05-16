@@ -7,6 +7,23 @@
 #include "Engine/StaticMesh.h"
 #include "Materials/MaterialInstance.h"
 
+void AMyProjectBlock::SpawnOX(bool bIsO, FVector Loc, FRotator Rot)
+{
+	//todo: this is where we spawn the O or X for visibility
+	FActorSpawnParameters SpawnParams;
+	AActor* SpawnedActorRef;
+	
+	if (bIsO) {
+
+		SpawnedActorRef = GetWorld()->SpawnActor<AActor>(OPieceActorToSpawn, Loc, Rot, SpawnParams);
+		UE_LOG(LogTemp, Warning, TEXT("Spawned O at Loc: %s Rot: %s"), *Loc.ToString(), *Rot.ToString());
+	}
+	else {
+		SpawnedActorRef = GetWorld()->SpawnActor<AActor>(XPieceActorToSpawn, Loc, Rot, SpawnParams);
+		UE_LOG(LogTemp, Warning, TEXT("Spawned X at Loc: %s Rot: %s"), *Loc.ToString(), *Rot.ToString());
+	}
+}
+
 AMyProjectBlock::AMyProjectBlock()
 {
 	// Structure to hold one-time initialization
@@ -47,6 +64,10 @@ AMyProjectBlock::AMyProjectBlock()
 	BlueMaterial = ConstructorStatics.BlueMaterial.Get();
 	OrangeMaterial = ConstructorStatics.OrangeMaterial.Get();
 	RedMaterial = ConstructorStatics.RedMaterial.Get();
+
+	//set o and x 
+
+	
 }
 
 void AMyProjectBlock::BlockClicked(UPrimitiveComponent* ClickedComp, FKey ButtonClicked)
@@ -69,12 +90,17 @@ void AMyProjectBlock::HandleClicked()
 	{
 		bIsActive = true;
 
+		FVector BlockLoc = GetActorLocation();
+		FRotator BlockRot = GetActorRotation();
+
 		if (OwningGrid->BP1Turn) {
 			// Change material
+			SpawnOX(true, BlockLoc, BlockRot);
 			BlockMesh->SetMaterial(0, OrangeMaterial);
 		}
 		else if (OwningGrid->BP2Turn) {
 			// Change material
+			SpawnOX(false, BlockLoc, BlockRot);
 			BlockMesh->SetMaterial(0, RedMaterial);
 		}
 
