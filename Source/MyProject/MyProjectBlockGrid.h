@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "MyProjectBlock.h"
 #include "MyProjectBlockGrid.generated.h"
 
 /** Class used to spawn blocks and manage score */
@@ -37,7 +38,10 @@ public:
 	bool BP1Turn;
 	bool BP2Turn;
 
-	//grid
+	//grid TODO: prob delete this
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Any)
+	TArray<AMyProjectBlock*> BlockGrid;
+	//enum GridLocations {bottomLeft, bottomMid, bottomRight, midLeft, midMid, midRight, topLeft, topMid, topRight};
 
 	//END PAN CHANGE;
 
@@ -53,14 +57,19 @@ protected:
 	// Begin AActor interface
 	virtual void BeginPlay() override;
 	// End AActor interface
+	
 
 public:
 
 	/** Handle the block being clicked */
-	void HandleTurn();
+	void HandleTurn(int BlockIndex);
+
+	char CheckLineWin(int x, int y, int z);
 
 	/** Check game end */
-	void CheckGameEnd();
+	char CheckGameEnd();
+
+	void PrintGrid();
 
 	/** Returns DummyRoot subobject **/
 	FORCEINLINE class USceneComponent* GetDummyRoot() const { return DummyRoot; }
@@ -70,6 +79,4 @@ public:
 	/** Returns PlayerTurnText subobject **/
 	FORCEINLINE class UTextRenderComponent* GetPlayerTurnText() const { return PlayerTurnText; }
 };
-
-
 

@@ -66,6 +66,7 @@ AMyProjectBlock::AMyProjectBlock()
 	RedMaterial = ConstructorStatics.RedMaterial.Get();
 
 	//set o and x 
+	CharPiece = '-';
 
 	
 }
@@ -107,8 +108,11 @@ void AMyProjectBlock::HandleClicked()
 		// Tell the Grid
 		if (OwningGrid != nullptr)
 		{
-			OwningGrid->HandleTurn();
+			OwningGrid->HandleTurn(BlockIndex);
 		}
+
+		UE_LOG(LogClass, Log, TEXT("My X Value: %d"), xVal);
+		UE_LOG(LogClass, Log, TEXT("My Y Value: %d"), yVal);
 	}
 }
 

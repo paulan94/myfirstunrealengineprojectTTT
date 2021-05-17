@@ -23,7 +23,7 @@ class AMyProjectBlock : public AActor
 protected:
 	
 	UFUNCTION()
-	void SpawnOX(bool bIsO, FVector Loc, FRotator Rot);
+	void SpawnOX(bool bIsO, FVector Loc, FRotator Rot); //redo logic for the bool to use charpiece
 
 public:
 	AMyProjectBlock();
@@ -31,9 +31,12 @@ public:
 	/** Are we currently active? */
 	bool bIsActive;
 
+	char CharPiece;
+
 	//PAN CHANGES
 	int32 xVal;
 	int32 yVal;
+	int32 BlockIndex;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
 	TSubclassOf<AActor> OPieceActorToSpawn;

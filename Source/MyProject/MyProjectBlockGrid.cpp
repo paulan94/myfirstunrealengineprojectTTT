@@ -67,10 +67,10 @@ void AMyProjectBlockGrid::BeginPlay()
 
 			NewBlock->xVal = BlockX;
 			NewBlock->yVal = BlockY;
+			NewBlock->BlockIndex = BlockIndex;
+			NewBlock->CharPiece = 'N';
 
-			UE_LOG(LogClass, Log, TEXT("My X Value: %d"), NewBlock->xVal);
-			UE_LOG(LogClass, Log, TEXT("My Y Value: %d"), NewBlock->yVal);
-
+			//UE_LOG(LogTemp, Warning, TEXT("I just started running %s"), NewBlock->CharPiece);
 			// Tell the block about its owner
 			if (NewBlock != nullptr)
 			{
@@ -82,7 +82,7 @@ void AMyProjectBlockGrid::BeginPlay()
 }
 
 
-void AMyProjectBlockGrid::HandleTurn()
+void AMyProjectBlockGrid::HandleTurn(int BlockIndex)
 {
 	// Increment score
 	Score++;
@@ -92,20 +92,60 @@ void AMyProjectBlockGrid::HandleTurn()
 	if (BP1Turn) {
 		BP1Turn = false;
 		BP2Turn = true;
+		BlockGrid[BlockIndex]->CharPiece = 'x';
 		PlayerTurnText->SetText(FText::FromString("Player 2's Turn"));
 	}
 	else {
 		BP1Turn = true;
 		BP2Turn = false;
+		BlockGrid[BlockIndex]->CharPiece = 'o';
 		PlayerTurnText->SetText(FText::FromString("Player 1's Turn"));
 	}
 
-	CheckGameEnd();
+	//add to grid when handling turn
+	////CheckGameEnd();
+	//UE_LOG(LogTemp, Warning, TEXT(" block grid num : %s "), BlockGrid[0]->CharPiece);
+	//PrintGrid();
 }
 
-void AMyProjectBlockGrid::CheckGameEnd()
+void AMyProjectBlockGrid::PrintGrid()
 {
+	UE_LOG(LogTemp, Warning, TEXT(" block grid num : %s "), BlockGrid[0]);
+	for (int i = BlockGrid.Num(); i >= 3; i-=3)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s %s %s\n"), BlockGrid[i-2]->CharPiece, BlockGrid[i-1]->CharPiece, BlockGrid[i]->CharPiece);
+	}
+}
 
+char AMyProjectBlockGrid::CheckLineWin(int x, int y, int z)
+{
+	if (BlockGrid[x]->CharPiece == ' ') return 'o';
+	if (BlockGrid[x]->CharPiece != BlockGrid[y]->CharPiece) return 'o';
+	if (BlockGrid[y]->CharPiece != BlockGrid[z]->CharPiece) return 'o';
+	return BlockGrid[x]->CharPiece;
+}
+
+char AMyProjectBlockGrid::CheckGameEnd()
+{
+	char Winner;
+	// Horizontal lines.
+
+	if ((Winner = CheckLineWin(6, 7, 8)) != 'o') return Winner;
+	if ((Winner = CheckLineWin(3, 4, 5)) != 'o') return Winner;
+	if ((Winner = CheckLineWin(0, 1, 2)) != 'o') return Winner;
+
+	// Vertical lines.
+
+	if ((Winner = CheckLineWin(6, 3, 0)) != 'o') return Winner;
+	if ((Winner = CheckLineWin(7, 4, 1)) != 'o') return Winner;
+	if ((Winner = CheckLineWin(8, 5, 2)) != 'o') return Winner;
+
+	// Diagonal lines.
+
+	if ((Winner = CheckLineWin(6, 4, 2)) != 'o') return Winner;
+	if ((Winner = CheckLineWin(0, 4, 8)) != 'o') return Winner;
+
+	return 'o';
 }
 
 #undef LOCTEXT_NAMESPACE
