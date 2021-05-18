@@ -68,9 +68,11 @@ void AMyProjectBlockGrid::BeginPlay()
 			NewBlock->xVal = BlockX;
 			NewBlock->yVal = BlockY;
 			NewBlock->BlockIndex = BlockIndex;
-			NewBlock->CharPiece = 'N';
+			//NewBlock->CharPiece = 'N';
 
-			//UE_LOG(LogTemp, Warning, TEXT("I just started running %s"), NewBlock->CharPiece);
+			BlockGrid.Add(NewBlock);
+
+			//UE_LOG(LogTemp, Warning, TEXT("I just started running %s"), BlockGrid.Num());
 			// Tell the block about its owner
 			if (NewBlock != nullptr)
 			{
@@ -93,57 +95,91 @@ void AMyProjectBlockGrid::HandleTurn(int BlockIndex)
 		BP1Turn = false;
 		BP2Turn = true;
 		BlockGrid[BlockIndex]->CharPiece = 'x';
-		PlayerTurnText->SetText(FText::FromString("Player 2's Turn"));
+		PlayerTurnText->SetText(FText::FromString("O's Turn"));
 	}
 	else {
 		BP1Turn = true;
 		BP2Turn = false;
 		BlockGrid[BlockIndex]->CharPiece = 'o';
-		PlayerTurnText->SetText(FText::FromString("Player 1's Turn"));
+		PlayerTurnText->SetText(FText::FromString("X's Turn"));
 	}
 
 	//add to grid when handling turn
-	////CheckGameEnd();
-	//UE_LOG(LogTemp, Warning, TEXT(" block grid num : %s "), BlockGrid[0]->CharPiece);
-	//PrintGrid();
+	PrintGrid();
+	TCHAR winner = CheckGameEnd();
+
+	UE_LOG(LogTemp, Warning, TEXT("WINNER:  %s"), &winner);
 }
 
 void AMyProjectBlockGrid::PrintGrid()
 {
-	UE_LOG(LogTemp, Warning, TEXT(" block grid num : %s "), BlockGrid[0]);
-	for (int i = BlockGrid.Num(); i >= 3; i-=3)
+	//UE_LOG(LogTemp, Warning, TEXT(" block grid num : %s "), BlockGrid[0]);
+	for (int i = BlockGrid.Num()-1; i >= 2; i-=3)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s %s %s\n"), BlockGrid[i-2]->CharPiece, BlockGrid[i-1]->CharPiece, BlockGrid[i]->CharPiece);
+		UE_LOG(LogTemp, Warning, TEXT("%s %s %s\n"), &BlockGrid[i-2]->CharPiece, &BlockGrid[i-1]->CharPiece, &BlockGrid[i]->CharPiece);
 	}
 }
 
-char AMyProjectBlockGrid::CheckLineWin(int x, int y, int z)
+TCHAR AMyProjectBlockGrid::CheckLineWin(int x, int y, int z)
 {
-	if (BlockGrid[x]->CharPiece == ' ') return 'o';
-	if (BlockGrid[x]->CharPiece != BlockGrid[y]->CharPiece) return 'o';
-	if (BlockGrid[y]->CharPiece != BlockGrid[z]->CharPiece) return 'o';
+	if (BlockGrid[x]->CharPiece == '-') {
+		UE_LOG(LogTemp, Warning, TEXT("1st check"));
+		return 'o';
+	}
+	if (BlockGrid[x]->CharPiece != BlockGrid[y]->CharPiece) { 
+		UE_LOG(LogTemp, Warning, TEXT("2nd check"));
+		return 'o';
+	}
+	if (BlockGrid[y]->CharPiece != BlockGrid[z]->CharPiece) {
+		UE_LOG(LogTemp, Warning, TEXT("3rd check"));
+		return 'o';
+	}
 	return BlockGrid[x]->CharPiece;
 }
 
-char AMyProjectBlockGrid::CheckGameEnd()
+TCHAR AMyProjectBlockGrid::CheckGameEnd()
 {
 	char Winner;
 	// Horizontal lines.
 
-	if ((Winner = CheckLineWin(6, 7, 8)) != 'o') return Winner;
-	if ((Winner = CheckLineWin(3, 4, 5)) != 'o') return Winner;
-	if ((Winner = CheckLineWin(0, 1, 2)) != 'o') return Winner;
+	if ((Winner = CheckLineWin(6, 7, 8)) != 'o') {
+		UE_LOG(LogTemp, Warning, TEXT("CGE 1st check"));
+		return Winner;
+	}
+	if ((Winner = CheckLineWin(3, 4, 5)) != 'o') {
+		UE_LOG(LogTemp, Warning, TEXT("CGE 2nd check"));
+		return Winner;
+	}
+	if ((Winner = CheckLineWin(0, 1, 2)) != 'o') {
+		UE_LOG(LogTemp, Warning, TEXT("CGE 3rd check"));
+		return Winner;
+	}
 
 	// Vertical lines.
 
-	if ((Winner = CheckLineWin(6, 3, 0)) != 'o') return Winner;
-	if ((Winner = CheckLineWin(7, 4, 1)) != 'o') return Winner;
-	if ((Winner = CheckLineWin(8, 5, 2)) != 'o') return Winner;
+	if ((Winner = CheckLineWin(6, 3, 0)) != 'o') {
+		UE_LOG(LogTemp, Warning, TEXT("CGE VERT 1st check"));
+		return Winner;
+	}
+	if ((Winner = CheckLineWin(7, 4, 1)) != 'o') {
+		UE_LOG(LogTemp, Warning, TEXT("CGE VERT 2nd check"));
+		return Winner;
+	}
+	if ((Winner = CheckLineWin(8, 5, 2)) != 'o') {
+		UE_LOG(LogTemp, Warning, TEXT("CGE VERT 3rd check"));
+		return Winner;
+	}
 
 	// Diagonal lines.
 
-	if ((Winner = CheckLineWin(6, 4, 2)) != 'o') return Winner;
-	if ((Winner = CheckLineWin(0, 4, 8)) != 'o') return Winner;
+	if ((Winner = CheckLineWin(6, 4, 2)) != 'o') {
+		UE_LOG(LogTemp, Warning, TEXT("CGE DIAG 1st check"));
+		return Winner;
+	}
+	if ((Winner = CheckLineWin(0, 4, 8)) != 'o') {
+		UE_LOG(LogTemp, Warning, TEXT("CGE DIAG 2nd check"));
+		return Winner;
+	}
 
 	return 'o';
 }

@@ -31,7 +31,7 @@ public:
 	/** Are we currently active? */
 	bool bIsActive;
 
-	char CharPiece;
+	TCHAR CharPiece;
 
 	//PAN CHANGES
 	int32 xVal;

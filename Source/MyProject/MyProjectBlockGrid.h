@@ -64,10 +64,10 @@ public:
 	/** Handle the block being clicked */
 	void HandleTurn(int BlockIndex);
 
-	char CheckLineWin(int x, int y, int z);
+	TCHAR CheckLineWin(int x, int y, int z);
 
 	/** Check game end */
-	char CheckGameEnd();
+	TCHAR CheckGameEnd();
 
 	void PrintGrid();
 
