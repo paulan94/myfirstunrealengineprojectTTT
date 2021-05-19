@@ -7,22 +7,6 @@
 #include "Engine/StaticMesh.h"
 #include "Materials/MaterialInstance.h"
 
-void AMyProjectBlock::SpawnOX(bool bIsO, FVector Loc, FRotator Rot)
-{
-	//todo: this is where we spawn the O or X for visibility
-	FActorSpawnParameters SpawnParams;
-	AActor* SpawnedActorRef;
-	
-	if (bIsO) {
-
-		SpawnedActorRef = GetWorld()->SpawnActor<AActor>(OPieceActorToSpawn, Loc, Rot, SpawnParams);
-		UE_LOG(LogTemp, Warning, TEXT("Spawned O at Loc: %s Rot: %s"), *Loc.ToString(), *Rot.ToString());
-	}
-	else {
-		SpawnedActorRef = GetWorld()->SpawnActor<AActor>(XPieceActorToSpawn, Loc, Rot, SpawnParams);
-		UE_LOG(LogTemp, Warning, TEXT("Spawned X at Loc: %s Rot: %s"), *Loc.ToString(), *Rot.ToString());
-	}
-}
 
 AMyProjectBlock::AMyProjectBlock()
 {
@@ -44,6 +28,12 @@ AMyProjectBlock::AMyProjectBlock()
 		}
 	};
 	static FConstructorStatics ConstructorStatics;
+
+	static ConstructorHelpers::FObjectFinder<UBlueprint> OPieceSpawnObject(TEXT("Blueprint'/Game/Puzzle/OPiece_Blueprint.OPiece_Blueprint'"));
+	static ConstructorHelpers::FObjectFinder<UBlueprint> XPieceSpawnObject(TEXT("Blueprint'/Game/Puzzle/XPiece_Blueprint.XPiece_Blueprint'"));
+
+	OPieceActorToSpawn = (UClass*)OPieceSpawnObject.Object->GeneratedClass;
+	XPieceActorToSpawn = (UClass*)XPieceSpawnObject.Object->GeneratedClass;
 
 	// Create dummy root scene component
 	DummyRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Dummy0"));
@@ -67,9 +57,25 @@ AMyProjectBlock::AMyProjectBlock()
 
 	//set o and x 
 	CharPiece = '-';
-
 	
 }
+
+void AMyProjectBlock::SpawnOX(bool bIsO, FVector Loc, FRotator Rot)
+{
+	//todo: this is where we spawn the O or X for visibility
+	FActorSpawnParameters SpawnParams;
+
+	if (bIsO) {
+		//try to ::subclass() if not work
+		GetWorld()->SpawnActor<AActor>(OPieceActorToSpawn, Loc, Rot, SpawnParams);
+		UE_LOG(LogTemp, Warning, TEXT("Spawned O at Loc: %s Rot: %s"), *Loc.ToString(), *Rot.ToString());
+	}
+	else {
+		GetWorld()->SpawnActor<AActor>(XPieceActorToSpawn, Loc, Rot, SpawnParams);
+		UE_LOG(LogTemp, Warning, TEXT("Spawned X at Loc: %s Rot: %s"), *Loc.ToString(), *Rot.ToString());
+	}
+}
+
 
 void AMyProjectBlock::BlockClicked(UPrimitiveComponent* ClickedComp, FKey ButtonClicked)
 {
@@ -93,6 +99,8 @@ void AMyProjectBlock::HandleClicked()
 
 		FVector BlockLoc = GetActorLocation();
 		FRotator BlockRot = GetActorRotation();
+
+		BlockLoc.Z += 100;
 
 		if (OwningGrid->BP1Turn) {
 			// Change material

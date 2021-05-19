@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "MyTicTacToePiece.h"
 #include "MyProjectBlock.generated.h"
 
 /** A block that can be clicked */
@@ -20,6 +21,12 @@ class AMyProjectBlock : public AActor
 	UPROPERTY(Category = Block, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* BlockMesh;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
+		TSubclassOf<class AActor> OPieceActorToSpawn;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
+		TSubclassOf<class AActor> XPieceActorToSpawn;
+
 protected:
 	
 	UFUNCTION()
@@ -34,15 +41,9 @@ public:
 	TCHAR CharPiece;
 
 	//PAN CHANGES
-	int32 xVal;
+	int32 xVal; //TODO prob dont need x,yvals
 	int32 yVal;
 	int32 BlockIndex;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
-	TSubclassOf<AActor> OPieceActorToSpawn;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
-	TSubclassOf<AActor> XPieceActorToSpawn;
 
 	/** Pointer to white material used on the focused block */
 	UPROPERTY()
