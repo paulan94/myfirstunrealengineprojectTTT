@@ -63,8 +63,6 @@ void AMyProjectBlockGrid::BeginPlay()
 			// Spawn a block
 			AMyProjectBlock* NewBlock = GetWorld()->SpawnActor<AMyProjectBlock>(BlockLocation, FRotator(0, 0, 0));
 
-			NewBlock->xVal = BlockX;
-			NewBlock->yVal = BlockY;
 			NewBlock->BlockIndex = BlockIndex;
 			//NewBlock->CharPiece = 'N';
 
@@ -91,21 +89,23 @@ void AMyProjectBlockGrid::HandleTurn(int BlockIndex)
 	if (BP1Turn) {
 		BP1Turn = false;
 		BP2Turn = true;
-		BlockGrid[BlockIndex]->CharPiece = 'x';
+		BlockGrid[BlockIndex]->CharPiece = 'o';
 		PlayerTurnText->SetText(FText::FromString("O's Turn"));
 	}
 	else {
 		BP1Turn = true;
 		BP2Turn = false;
-		BlockGrid[BlockIndex]->CharPiece = 'o';
+		BlockGrid[BlockIndex]->CharPiece = 'x';
 		PlayerTurnText->SetText(FText::FromString("X's Turn"));
 	}
 
 	//add to grid when handling turn
 	PrintGrid();
 	TCHAR winner = CheckGameEnd();
+	UE_LOG(LogTemp, Warning, TEXT("WINNER11:  %s"), &winner);
 	if (winner != ('-')) {
 		UE_LOG(LogTemp, Warning, TEXT("WINNER:  %s"), &winner);
+		ScoreText->SetText(FString::Printf(TEXT("%s Wins!"), &winner));
 	}
 	else {
 		UE_LOG(LogTemp, Warning, TEXT("no winner found yet"));
@@ -142,41 +142,41 @@ TCHAR AMyProjectBlockGrid::CheckGameEnd()
 	char Winner;
 	// Horizontal
 	if ((Winner = CheckLineWin(6, 7, 8)) != '-') {
-		UE_LOG(LogTemp, Warning, TEXT("CGE 1st check"));
+		UE_LOG(LogTemp, Warning, TEXT("CGE 1st check %s"), &Winner);
 		return Winner;
 	}
 	if ((Winner = CheckLineWin(3, 4, 5)) != '-') {
-		UE_LOG(LogTemp, Warning, TEXT("CGE 2nd check"));
+		UE_LOG(LogTemp, Warning, TEXT("CGE 2nd check %s"), &Winner);
 		return Winner;
 	}
 	if ((Winner = CheckLineWin(0, 1, 2)) != '-') {
-		UE_LOG(LogTemp, Warning, TEXT("CGE 3rd check"));
+		UE_LOG(LogTemp, Warning, TEXT("CGE 3rd check %s"), &Winner);
 		return Winner;
 	}
 
 	// Vertical
 
 	if ((Winner = CheckLineWin(6, 3, 0)) != '-') {
-		UE_LOG(LogTemp, Warning, TEXT("CGE VERT 1st check"));
+		UE_LOG(LogTemp, Warning, TEXT("CGE VERT 1st check %s"), &Winner);
 		return Winner;
 	}
 	if ((Winner = CheckLineWin(7, 4, 1)) != '-') {
-		UE_LOG(LogTemp, Warning, TEXT("CGE VERT 2nd check"));
+		UE_LOG(LogTemp, Warning, TEXT("CGE VERT 2nd check %s"), &Winner);
 		return Winner;
 	}
 	if ((Winner = CheckLineWin(8, 5, 2)) != '-') {
-		UE_LOG(LogTemp, Warning, TEXT("CGE VERT 3rd check"));
+		UE_LOG(LogTemp, Warning, TEXT("CGE VERT 3rd check %s"), &Winner);
 		return Winner;
 	}
 
 	// Diagonal
 
 	if ((Winner = CheckLineWin(6, 4, 2)) != '-') {
-		UE_LOG(LogTemp, Warning, TEXT("CGE DIAG 1st check"));
+		UE_LOG(LogTemp, Warning, TEXT("CGE DIAG 1st check %s"), &Winner);
 		return Winner;
 	}
 	if ((Winner = CheckLineWin(0, 4, 8)) != '-') {
-		UE_LOG(LogTemp, Warning, TEXT("CGE DIAG 2nd check"));
+		UE_LOG(LogTemp, Warning, TEXT("CGE DIAG 2nd check %s"), &Winner);
 		return Winner;
 	}
 

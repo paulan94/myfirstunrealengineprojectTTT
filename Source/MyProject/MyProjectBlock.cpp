@@ -118,9 +118,6 @@ void AMyProjectBlock::HandleClicked()
 		{
 			OwningGrid->HandleTurn(BlockIndex);
 		}
-
-		UE_LOG(LogClass, Log, TEXT("My X Value: %d"), xVal);
-		UE_LOG(LogClass, Log, TEXT("My Y Value: %d"), yVal);
 	}
 }
 

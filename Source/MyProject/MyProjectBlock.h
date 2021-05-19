@@ -41,8 +41,6 @@ public:
 	TCHAR CharPiece;
 
 	//PAN CHANGES
-	int32 xVal; //TODO prob dont need x,yvals
-	int32 yVal;
 	int32 BlockIndex;
 
 	/** Pointer to white material used on the focused block */
