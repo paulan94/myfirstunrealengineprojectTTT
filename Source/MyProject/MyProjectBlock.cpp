@@ -49,7 +49,6 @@ AMyProjectBlock::AMyProjectBlock()
 	BlockMesh->SetMaterial(0, ConstructorStatics.BlueMaterial.Get());
 	BlockMesh->SetupAttachment(DummyRoot);
 	BlockMesh->OnClicked.AddDynamic(this, &AMyProjectBlock::BlockClicked);
-	BlockMesh->OnInputTouchBegin.AddDynamic(this, &AMyProjectBlock::OnFingerPressedBlock);
 
 	// Save a pointer to the orange material
 	BaseMaterial = ConstructorStatics.BaseMaterial.Get();
@@ -86,15 +85,12 @@ void AMyProjectBlock::BlockClicked(UPrimitiveComponent* ClickedComp, FKey Button
 }
 
 
-void AMyProjectBlock::OnFingerPressedBlock(ETouchIndex::Type FingerIndex, UPrimitiveComponent* TouchedComponent)
-{
-	HandleClicked();
-}
-
 void AMyProjectBlock::HandleClicked()
 {
 	//TODO: update grid when clicked
 
+
+	UE_LOG(LogTemp, Warning, TEXT("clicked %s"), bIsActive);
 	// Check we are not already active
 	if (!bIsActive)
 	{

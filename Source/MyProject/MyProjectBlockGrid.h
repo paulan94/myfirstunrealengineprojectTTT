@@ -38,6 +38,8 @@ public:
 	bool BP1Turn;
 	bool BP2Turn;
 
+	bool IsGameEnded;
+
 	//grid TODO: prob delete this
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Any)
 	TArray<AMyProjectBlock*> BlockGrid;
@@ -72,10 +74,7 @@ public:
 	//pattern: 1-> horizontal, 2-> vertical, 3/4 -> diagonal patterns
 	void ChangeColorOnWinGrid(int32 start, int32 end, int32 addBy);
 
-	void ChangeColorOnHorizontalWin(int32 start, int32 end);
-	void ChangeColorOnVerticalWin(int32 start, int32 end);
-	void ChangeColorOnLeftTopDiagonalWin(int32 start, int32 end);
-	void ChangeColorOnLeftBottomDiagonalWin(int32 start, int32 end);
+	void HandleGameEnd();
 
 	void PrintGrid();
 

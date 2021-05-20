@@ -30,6 +30,8 @@ AMyProjectBlockGrid::AMyProjectBlockGrid()
 	Size = 3;
 	BlockSpacing = 300.f;
 
+	IsGameEnded = false;
+
 	//create grid
 }
 
@@ -84,6 +86,8 @@ void AMyProjectBlockGrid::HandleTurn(int BlockIndex)
 	// Increment score
 	Score++;
 
+	if (IsGameEnded) return;
+
 	// Update text
 	ScoreText->SetText(FText::Format(LOCTEXT("ScoreFmt", "Score: {0}"), FText::AsNumber(Score)));
 	if (BP1Turn) {
@@ -102,9 +106,7 @@ void AMyProjectBlockGrid::HandleTurn(int BlockIndex)
 	//add to grid when handling turn
 	PrintGrid(); //get rid after build
 	TCHAR winner = CheckGameEnd();
-	UE_LOG(LogTemp, Warning, TEXT("WINNER11:  %s"), &winner);
 	if (winner != ('-')) {
-		UE_LOG(LogTemp, Warning, TEXT("WINNER:  %s"), &winner);
 		ScoreText->SetText(FString::Printf(TEXT("%s Wins!"), &winner));
 		PlayerTurnText->SetText(FText::FromString(""));
 		//reset game or say game end here. //also disable the text for whos turn it is.
@@ -125,15 +127,12 @@ void AMyProjectBlockGrid::PrintGrid()
 TCHAR AMyProjectBlockGrid::CheckLineWin(int x, int y, int z)
 {
 	if (BlockGrid[x]->CharPiece == '-') {
-		//UE_LOG(LogTemp, Warning, TEXT("1st check"));
 		return '-';
 	}
 	if (BlockGrid[x]->CharPiece != BlockGrid[y]->CharPiece) { 
-		//UE_LOG(LogTemp, Warning, TEXT("2nd check"));
 		return '-';
 	}
 	if (BlockGrid[y]->CharPiece != BlockGrid[z]->CharPiece) {
-		//UE_LOG(LogTemp, Warning, TEXT("3rd check"));
 		return '-';
 	}
 	return BlockGrid[x]->CharPiece;
@@ -144,7 +143,7 @@ TCHAR AMyProjectBlockGrid::CheckGameEnd()
 	char Winner;
 	// Horizontal
 	if ((Winner = CheckLineWin(6, 7, 8)) != '-') {
-		ChangeColorOnWinGrid(6,8, 1);
+		ChangeColorOnWinGrid(6, 8, 1);
 		return Winner;
 	}
 	if ((Winner = CheckLineWin(3, 4, 5)) != '-') {
@@ -190,6 +189,20 @@ void AMyProjectBlockGrid::ChangeColorOnWinGrid(int32 start, int32 end, int32 add
 	for (int32 i = start; i <= end; i+= addBy) {
 		BlockGrid[i]->ChangeColorOnWin();
 	}
+	HandleGameEnd();
+
+}
+
+void AMyProjectBlockGrid::HandleGameEnd()
+{
+	IsGameEnded = true;
+	//TODO think of how to handle this
+	//set all blocks to isactive false
+	/*for (int i = 0; i < BlockGrid.Num(); i++) {
+		if (BlockGrid[i]->bIsActive) {
+			BlockGrid[i]->bIsActive = false;
+		}
+	}*/
 }
 
 #undef LOCTEXT_NAMESPACE
