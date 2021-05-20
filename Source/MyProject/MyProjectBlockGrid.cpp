@@ -100,12 +100,14 @@ void AMyProjectBlockGrid::HandleTurn(int BlockIndex)
 	}
 
 	//add to grid when handling turn
-	PrintGrid();
+	PrintGrid(); //get rid after build
 	TCHAR winner = CheckGameEnd();
 	UE_LOG(LogTemp, Warning, TEXT("WINNER11:  %s"), &winner);
 	if (winner != ('-')) {
 		UE_LOG(LogTemp, Warning, TEXT("WINNER:  %s"), &winner);
 		ScoreText->SetText(FString::Printf(TEXT("%s Wins!"), &winner));
+		PlayerTurnText->SetText(FText::FromString(""));
+		//reset game or say game end here. //also disable the text for whos turn it is.
 	}
 	else {
 		UE_LOG(LogTemp, Warning, TEXT("no winner found yet"));
@@ -143,13 +145,16 @@ TCHAR AMyProjectBlockGrid::CheckGameEnd()
 	// Horizontal
 	if ((Winner = CheckLineWin(6, 7, 8)) != '-') {
 		UE_LOG(LogTemp, Warning, TEXT("CGE 1st check %s"), &Winner);
+		ChangeColorOnHorizontalWin(6,8);
 		return Winner;
 	}
 	if ((Winner = CheckLineWin(3, 4, 5)) != '-') {
 		UE_LOG(LogTemp, Warning, TEXT("CGE 2nd check %s"), &Winner);
+		ChangeColorOnHorizontalWin(3, 5);
 		return Winner;
 	}
 	if ((Winner = CheckLineWin(0, 1, 2)) != '-') {
+		ChangeColorOnHorizontalWin(0, 2);
 		UE_LOG(LogTemp, Warning, TEXT("CGE 3rd check %s"), &Winner);
 		return Winner;
 	}
@@ -157,14 +162,17 @@ TCHAR AMyProjectBlockGrid::CheckGameEnd()
 	// Vertical
 
 	if ((Winner = CheckLineWin(6, 3, 0)) != '-') {
+		ChangeColorOnVerticalWin(0, 6);
 		UE_LOG(LogTemp, Warning, TEXT("CGE VERT 1st check %s"), &Winner);
 		return Winner;
 	}
 	if ((Winner = CheckLineWin(7, 4, 1)) != '-') {
+		ChangeColorOnVerticalWin(1, 7);
 		UE_LOG(LogTemp, Warning, TEXT("CGE VERT 2nd check %s"), &Winner);
 		return Winner;
 	}
 	if ((Winner = CheckLineWin(8, 5, 2)) != '-') {
+		ChangeColorOnVerticalWin(2, 8);
 		UE_LOG(LogTemp, Warning, TEXT("CGE VERT 3rd check %s"), &Winner);
 		return Winner;
 	}
@@ -173,14 +181,44 @@ TCHAR AMyProjectBlockGrid::CheckGameEnd()
 
 	if ((Winner = CheckLineWin(6, 4, 2)) != '-') {
 		UE_LOG(LogTemp, Warning, TEXT("CGE DIAG 1st check %s"), &Winner);
+		ChangeColorOnLeftTopDiagonalWin(2,6);
 		return Winner;
 	}
 	if ((Winner = CheckLineWin(0, 4, 8)) != '-') {
+		ChangeColorOnLeftBottomDiagonalWin(0, 8);
 		UE_LOG(LogTemp, Warning, TEXT("CGE DIAG 2nd check %s"), &Winner);
 		return Winner;
 	}
 
 	return '-';
+}
+
+void AMyProjectBlockGrid::ChangeColorOnHorizontalWin(int32 start, int32 end)
+{
+	for (int32 i = start; i <= end; i++) {
+		BlockGrid[i]->ChangeColorOnWin();
+	}
+}
+
+void AMyProjectBlockGrid::ChangeColorOnVerticalWin(int32 start, int32 end)
+{
+	for (int32 i = start; i <= end; i+=3) {
+		BlockGrid[i]->ChangeColorOnWin();
+	}
+}
+
+void AMyProjectBlockGrid::ChangeColorOnLeftTopDiagonalWin(int32 start, int32 end)
+{
+	for (int32 i = start; i <= end; i+=2) {
+		BlockGrid[i]->ChangeColorOnWin();
+	}
+}
+
+void AMyProjectBlockGrid::ChangeColorOnLeftBottomDiagonalWin(int32 start, int32 end)
+{
+	for (int32 i = start; i <= end; i+=4) {
+		BlockGrid[i]->ChangeColorOnWin();
+	}
 }
 
 #undef LOCTEXT_NAMESPACE

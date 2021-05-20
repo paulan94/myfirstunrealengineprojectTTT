@@ -59,6 +59,10 @@ public:
 	UPROPERTY()
 	class UMaterialInstance* RedMaterial;
 
+	/** Pointer to red material used on active blocks */
+	UPROPERTY()
+	class UMaterialInstance* GreenMaterial;
+
 	//spawn actor 
 
 	/** Grid that owns us */
@@ -76,6 +80,8 @@ public:
 	void HandleClicked();
 
 	void Highlight(bool bOn);
+
+	void ChangeColorOnWin();
 
 
 public:

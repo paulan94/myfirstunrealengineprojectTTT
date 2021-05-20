@@ -18,12 +18,14 @@ AMyProjectBlock::AMyProjectBlock()
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> BlueMaterial;
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> OrangeMaterial;
 		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> RedMaterial;
+		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> GreenMaterial;
 		FConstructorStatics()
 			: PlaneMesh(TEXT("/Game/Puzzle/Meshes/PuzzleCube.PuzzleCube"))
 			, BaseMaterial(TEXT("/Game/Puzzle/Meshes/BaseMaterial.BaseMaterial"))
 			, BlueMaterial(TEXT("/Game/Puzzle/Meshes/BlueMaterial.BlueMaterial"))
 			, OrangeMaterial(TEXT("/Game/Puzzle/Meshes/OrangeMaterial.OrangeMaterial"))
 			, RedMaterial(TEXT("/Game/Puzzle/Meshes/RedMaterial.RedMaterial"))
+			, GreenMaterial(TEXT("/Game/Puzzle/Meshes/GreenMaterial.GreenMaterial"))
 		{
 		}
 	};
@@ -54,6 +56,7 @@ AMyProjectBlock::AMyProjectBlock()
 	BlueMaterial = ConstructorStatics.BlueMaterial.Get();
 	OrangeMaterial = ConstructorStatics.OrangeMaterial.Get();
 	RedMaterial = ConstructorStatics.RedMaterial.Get();
+	GreenMaterial = ConstructorStatics.GreenMaterial.Get();
 
 	//set o and x 
 	CharPiece = '-';
@@ -137,4 +140,9 @@ void AMyProjectBlock::Highlight(bool bOn)
 	{
 		BlockMesh->SetMaterial(0, BlueMaterial);
 	}
+}
+
+void AMyProjectBlock::ChangeColorOnWin()
+{
+	BlockMesh->SetMaterial(0, GreenMaterial);
 }

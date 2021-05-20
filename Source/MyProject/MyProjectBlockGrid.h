@@ -69,6 +69,11 @@ public:
 	/** Check game end */
 	TCHAR CheckGameEnd();
 
+	void ChangeColorOnHorizontalWin(int32 start, int32 end);
+	void ChangeColorOnVerticalWin(int32 start, int32 end);
+	void ChangeColorOnLeftTopDiagonalWin(int32 start, int32 end);
+	void ChangeColorOnLeftBottomDiagonalWin(int32 start, int32 end);
+
 	void PrintGrid();
 
 	/** Returns DummyRoot subobject **/
