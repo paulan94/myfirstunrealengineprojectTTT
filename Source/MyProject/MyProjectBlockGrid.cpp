@@ -144,79 +144,50 @@ TCHAR AMyProjectBlockGrid::CheckGameEnd()
 	char Winner;
 	// Horizontal
 	if ((Winner = CheckLineWin(6, 7, 8)) != '-') {
-		UE_LOG(LogTemp, Warning, TEXT("CGE 1st check %s"), &Winner);
-		ChangeColorOnHorizontalWin(6,8);
+		ChangeColorOnWinGrid(6,8, 1);
 		return Winner;
 	}
 	if ((Winner = CheckLineWin(3, 4, 5)) != '-') {
-		UE_LOG(LogTemp, Warning, TEXT("CGE 2nd check %s"), &Winner);
-		ChangeColorOnHorizontalWin(3, 5);
+		ChangeColorOnWinGrid(3, 5, 1);
 		return Winner;
 	}
 	if ((Winner = CheckLineWin(0, 1, 2)) != '-') {
-		ChangeColorOnHorizontalWin(0, 2);
-		UE_LOG(LogTemp, Warning, TEXT("CGE 3rd check %s"), &Winner);
+		ChangeColorOnWinGrid(0, 2, 1);
 		return Winner;
 	}
 
 	// Vertical
 
 	if ((Winner = CheckLineWin(6, 3, 0)) != '-') {
-		ChangeColorOnVerticalWin(0, 6);
-		UE_LOG(LogTemp, Warning, TEXT("CGE VERT 1st check %s"), &Winner);
+		ChangeColorOnWinGrid(0, 6, 3);
 		return Winner;
 	}
 	if ((Winner = CheckLineWin(7, 4, 1)) != '-') {
-		ChangeColorOnVerticalWin(1, 7);
-		UE_LOG(LogTemp, Warning, TEXT("CGE VERT 2nd check %s"), &Winner);
+		ChangeColorOnWinGrid(1, 7, 3);
 		return Winner;
 	}
 	if ((Winner = CheckLineWin(8, 5, 2)) != '-') {
-		ChangeColorOnVerticalWin(2, 8);
-		UE_LOG(LogTemp, Warning, TEXT("CGE VERT 3rd check %s"), &Winner);
+		ChangeColorOnWinGrid(2, 8, 3);
 		return Winner;
 	}
 
 	// Diagonal
 
 	if ((Winner = CheckLineWin(6, 4, 2)) != '-') {
-		UE_LOG(LogTemp, Warning, TEXT("CGE DIAG 1st check %s"), &Winner);
-		ChangeColorOnLeftTopDiagonalWin(2,6);
+		ChangeColorOnWinGrid(2,6, 2);
 		return Winner;
 	}
 	if ((Winner = CheckLineWin(0, 4, 8)) != '-') {
-		ChangeColorOnLeftBottomDiagonalWin(0, 8);
-		UE_LOG(LogTemp, Warning, TEXT("CGE DIAG 2nd check %s"), &Winner);
+		ChangeColorOnWinGrid(0, 8, 4);
 		return Winner;
 	}
 
 	return '-';
 }
 
-void AMyProjectBlockGrid::ChangeColorOnHorizontalWin(int32 start, int32 end)
+void AMyProjectBlockGrid::ChangeColorOnWinGrid(int32 start, int32 end, int32 addBy)
 {
-	for (int32 i = start; i <= end; i++) {
-		BlockGrid[i]->ChangeColorOnWin();
-	}
-}
-
-void AMyProjectBlockGrid::ChangeColorOnVerticalWin(int32 start, int32 end)
-{
-	for (int32 i = start; i <= end; i+=3) {
-		BlockGrid[i]->ChangeColorOnWin();
-	}
-}
-
-void AMyProjectBlockGrid::ChangeColorOnLeftTopDiagonalWin(int32 start, int32 end)
-{
-	for (int32 i = start; i <= end; i+=2) {
-		BlockGrid[i]->ChangeColorOnWin();
-	}
-}
-
-void AMyProjectBlockGrid::ChangeColorOnLeftBottomDiagonalWin(int32 start, int32 end)
-{
-	for (int32 i = start; i <= end; i+=4) {
+	for (int32 i = start; i <= end; i+= addBy) {
 		BlockGrid[i]->ChangeColorOnWin();
 	}
 }

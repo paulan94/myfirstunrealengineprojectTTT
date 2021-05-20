@@ -69,6 +69,9 @@ public:
 	/** Check game end */
 	TCHAR CheckGameEnd();
 
+	//pattern: 1-> horizontal, 2-> vertical, 3/4 -> diagonal patterns
+	void ChangeColorOnWinGrid(int32 start, int32 end, int32 addBy);
+
 	void ChangeColorOnHorizontalWin(int32 start, int32 end);
 	void ChangeColorOnVerticalWin(int32 start, int32 end);
 	void ChangeColorOnLeftTopDiagonalWin(int32 start, int32 end);
