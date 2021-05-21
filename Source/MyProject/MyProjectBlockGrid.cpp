@@ -14,16 +14,16 @@ AMyProjectBlockGrid::AMyProjectBlockGrid()
 	RootComponent = DummyRoot;
 
 	// Create static mesh component
-	ScoreText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("ScoreText0"));
-	ScoreText->SetRelativeLocation(FVector(200.f,0.f,0.f));
-	ScoreText->SetRelativeRotation(FRotator(90.f,0.f,0.f));
-	ScoreText->SetText(FText::Format(LOCTEXT("ScoreFmt", "Score: {0}"), FText::AsNumber(0)));
-	ScoreText->SetupAttachment(DummyRoot);
+	WinnerText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("WinnerText0"));
+	WinnerText->SetRelativeLocation(FVector(200.f,0.f,0.f));
+	WinnerText->SetRelativeRotation(FRotator(90.f,0.f,0.f));
+	WinnerText->SetText(FText::FromString("Wins"));
+	WinnerText->SetupAttachment(DummyRoot);
 
 	PlayerTurnText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("PlayerTurnText0"));
 	PlayerTurnText->SetRelativeLocation(FVector(250.0f, 0.f, 0.f));
 	PlayerTurnText->SetRelativeRotation(FRotator(90.f, 0.f, 0.f));
-	PlayerTurnText->SetText(FText::FromString("Player 1's Turn"));
+	PlayerTurnText->SetText(FText::FromString("O's Turn"));
 	PlayerTurnText->SetupAttachment(DummyRoot);
 
 	// Set defaults *dont change Size for tictactoe
@@ -35,11 +35,16 @@ AMyProjectBlockGrid::AMyProjectBlockGrid()
 	//create grid
 }
 
-
+//RM this if i can
 void AMyProjectBlockGrid::BeginPlay()
 {
 	Super::BeginPlay();
 
+	StartGame();
+}
+
+void AMyProjectBlockGrid::StartGame()
+{
 	// Number of blocks
 	const int32 NumBlocks = Size * Size;
 
@@ -59,15 +64,13 @@ void AMyProjectBlockGrid::BeginPlay()
 			const float XOffset = (BlockIndex / Size) * BlockSpacing; // Divide by dimension
 			const float YOffset = (BlockIndex % Size) * BlockSpacing; // Modulo gives remainder
 
-			// Make position vector, offset from Grid location
+																	  // Make position vector, offset from Grid location
 			const FVector BlockLocation = FVector(XOffset, YOffset, 0.f) + GetActorLocation();
 
 			// Spawn a block
 			AMyProjectBlock* NewBlock = GetWorld()->SpawnActor<AMyProjectBlock>(BlockLocation, FRotator(0, 0, 0));
 
 			NewBlock->BlockIndex = BlockIndex;
-			//NewBlock->CharPiece = 'N';
-
 			BlockGrid.Add(NewBlock);
 
 			// Tell the block about its owner
@@ -89,25 +92,24 @@ void AMyProjectBlockGrid::HandleTurn(int BlockIndex)
 	if (IsGameEnded) return;
 
 	// Update text
-	ScoreText->SetText(FText::Format(LOCTEXT("ScoreFmt", "Score: {0}"), FText::AsNumber(Score)));
 	if (BP1Turn) {
 		BP1Turn = false;
 		BP2Turn = true;
-		BlockGrid[BlockIndex]->CharPiece = 'o';
-		PlayerTurnText->SetText(FText::FromString("O's Turn"));
+		BlockGrid[BlockIndex]->CharPiece = 'O';
+		PlayerTurnText->SetText(FText::FromString("X's Turn"));
 	}
 	else {
 		BP1Turn = true;
 		BP2Turn = false;
-		BlockGrid[BlockIndex]->CharPiece = 'x';
-		PlayerTurnText->SetText(FText::FromString("X's Turn"));
+		BlockGrid[BlockIndex]->CharPiece = 'X';
+		PlayerTurnText->SetText(FText::FromString("O's Turn"));
 	}
 
 	//add to grid when handling turn
 	PrintGrid(); //get rid after build
 	TCHAR winner = CheckGameEnd();
 	if (winner != ('-')) {
-		ScoreText->SetText(FString::Printf(TEXT("%s Wins!"), &winner));
+		WinnerText->SetText(FString::Printf(TEXT("%s Wins!"), &winner));
 		PlayerTurnText->SetText(FText::FromString(""));
 		//reset game or say game end here. //also disable the text for whos turn it is.
 	}

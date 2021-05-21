@@ -90,7 +90,7 @@ void AMyProjectBlock::HandleClicked()
 	//TODO: update grid when clicked
 
 
-	UE_LOG(LogTemp, Warning, TEXT("clicked %s"), bIsActive);
+	UE_LOG(LogTemp, Warning, TEXT("clicked %s"), &bIsActive);
 	// Check we are not already active
 	if (!bIsActive)
 	{

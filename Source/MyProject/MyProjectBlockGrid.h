@@ -19,7 +19,7 @@ class AMyProjectBlockGrid : public AActor
 
 	/** Text component for the score */
 	UPROPERTY(Category = Grid, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UTextRenderComponent* ScoreText;
+	class UTextRenderComponent* WinnerText;
 
 	/** Text component for the score */
 	UPROPERTY(Category = Grid, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -58,6 +58,7 @@ public:
 protected:
 	// Begin AActor interface
 	virtual void BeginPlay() override;
+	void StartGame();
 	// End AActor interface
 	
 
@@ -81,7 +82,7 @@ public:
 	/** Returns DummyRoot subobject **/
 	FORCEINLINE class USceneComponent* GetDummyRoot() const { return DummyRoot; }
 	/** Returns ScoreText subobject **/
-	FORCEINLINE class UTextRenderComponent* GetScoreText() const { return ScoreText; }
+	FORCEINLINE class UTextRenderComponent* GetWinnerText() const { return WinnerText; }
 
 	/** Returns PlayerTurnText subobject **/
 	FORCEINLINE class UTextRenderComponent* GetPlayerTurnText() const { return PlayerTurnText; }

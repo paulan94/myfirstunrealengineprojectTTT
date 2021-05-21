@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "MyTicTacToePiece.h"
 #include "MyProjectBlock.generated.h"
 
 /** A block that can be clicked */
