@@ -191,13 +191,20 @@ void AMyProjectBlockGrid::ChangeColorOnWinGrid(int32 start, int32 end, int32 add
 	for (int32 i = start; i <= end; i+= addBy) {
 		BlockGrid[i]->ChangeColorOnWin();
 	}
-	HandleGameEnd();
+
+	//todo uncomment this for final vers
+	//HandleGameEnd();
 
 }
 
 void AMyProjectBlockGrid::HandleGameEnd()
 {
 	IsGameEnded = true;
+
+	for (int32 i = 0; i < BlockGrid.Num(); i++) {
+		BlockGrid[i]->ResetBlock();
+		
+	}
 	//TODO think of how to handle this
 	//set all blocks to isactive false
 	/*for (int i = 0; i < BlockGrid.Num(); i++) {

@@ -42,6 +42,9 @@ public:
 	//PAN CHANGES
 	int32 BlockIndex;
 
+	AActor* SpawnedPiece;
+
+
 	/** Pointer to white material used on the focused block */
 	UPROPERTY()
 	class UMaterial* BaseMaterial;
@@ -62,8 +65,6 @@ public:
 	UPROPERTY()
 	class UMaterialInstance* GreenMaterial;
 
-	//spawn actor 
-
 	/** Grid that owns us */
 	UPROPERTY()
 	class AMyProjectBlockGrid* OwningGrid;
@@ -77,6 +78,8 @@ public:
 	void Highlight(bool bOn);
 
 	void ChangeColorOnWin();
+
+	void ResetBlock();
 
 
 public:

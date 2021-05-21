@@ -69,11 +69,11 @@ void AMyProjectBlock::SpawnOX(bool bIsO, FVector Loc, FRotator Rot)
 
 	if (bIsO) {
 		//try to ::subclass() if not work
-		GetWorld()->SpawnActor<AActor>(OPieceActorToSpawn, Loc, Rot, SpawnParams);
+		SpawnedPiece = GetWorld()->SpawnActor<AActor>(OPieceActorToSpawn, Loc, Rot, SpawnParams);
 		UE_LOG(LogTemp, Warning, TEXT("Spawned O at Loc: %s Rot: %s"), *Loc.ToString(), *Rot.ToString());
 	}
 	else {
-		GetWorld()->SpawnActor<AActor>(XPieceActorToSpawn, Loc, Rot, SpawnParams);
+		SpawnedPiece = GetWorld()->SpawnActor<AActor>(XPieceActorToSpawn, Loc, Rot, SpawnParams);
 		UE_LOG(LogTemp, Warning, TEXT("Spawned X at Loc: %s Rot: %s"), *Loc.ToString(), *Rot.ToString());
 	}
 }
@@ -87,10 +87,6 @@ void AMyProjectBlock::BlockClicked(UPrimitiveComponent* ClickedComp, FKey Button
 
 void AMyProjectBlock::HandleClicked()
 {
-	//TODO: update grid when clicked
-
-
-	UE_LOG(LogTemp, Warning, TEXT("clicked %s"), &bIsActive);
 	// Check we are not already active
 	if (!bIsActive)
 	{
@@ -136,6 +132,16 @@ void AMyProjectBlock::Highlight(bool bOn)
 	{
 		BlockMesh->SetMaterial(0, BlueMaterial);
 	}
+}
+
+void AMyProjectBlock::ResetBlock() {
+	BlockMesh->SetMaterial(0, BaseMaterial);
+	CharPiece = '-';
+	if (SpawnedPiece != NULL && !SpawnedPiece->IsPendingKill()) {
+		SpawnedPiece->Destroy();
+	}
+	
+	GetWorld()->ForceGarbageCollection(true);
 }
 
 void AMyProjectBlock::ChangeColorOnWin()
