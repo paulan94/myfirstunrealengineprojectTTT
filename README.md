@@ -9,8 +9,8 @@ This is my first attempt in creating a project in UE4 written in C++ via Visual 
 
 ### Dependencies
 
-Unreal Engine 4
-Visual Studios
+* Unreal Engine 4
+* Visual Studios
 
 
 ## Initial Ideas that went South
@@ -21,7 +21,6 @@ Visual Studios
 
 ## Authors
 
-Contributors names and contact info
 Paul An
 
 
