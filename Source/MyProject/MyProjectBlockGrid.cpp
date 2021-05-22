@@ -13,22 +13,24 @@ AMyProjectBlockGrid::AMyProjectBlockGrid()
 	DummyRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Dummy0"));
 	RootComponent = DummyRoot;
 
-	// Create static mesh component
-	WinnerText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("WinnerText0"));
-	WinnerText->SetRelativeLocation(FVector(200.f,0.f,0.f));
-	WinnerText->SetRelativeRotation(FRotator(90.f,0.f,0.f));
-	WinnerText->SetText(FText::FromString("Wins"));
-	WinnerText->SetupAttachment(DummyRoot);
-
 	PlayerTurnText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("PlayerTurnText0"));
 	PlayerTurnText->SetRelativeLocation(FVector(250.0f, 0.f, 0.f));
 	PlayerTurnText->SetRelativeRotation(FRotator(90.f, 0.f, 0.f));
 	PlayerTurnText->SetText(FText::FromString("O's Turn"));
-	PlayerTurnText->SetupAttachment(DummyRoot);
+	PlayerTurnText->SetupAttachment(DummyRoot);	
+	
+	OWinText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("OWinText0"));
+	OWinText->SetupAttachment(DummyRoot);
 
-	// Set defaults *dont change Size for tictactoe
+	XWinText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("XWinText0"));
+	XWinText->SetupAttachment(DummyRoot);
+
+	// Set defaults *dont change Size for tic-tac-toe
 	Size = 3;
 	BlockSpacing = 300.f;
+
+	P1Score = 0; //O
+	P2Score = 0; //X
 
 	IsGameEnded = false;
 
@@ -50,11 +52,10 @@ void AMyProjectBlockGrid::StartGame()
 	BP1Turn = true;
 	BP2Turn = false;
 
-	int32 x = 3; //todo change how this is 
+	int32 x = 3;
 	int32 y = 3;
 	int32 BlockIndex = 0;
 
-	//new loop to spawn each block
 	for (int32 BlockX = 0; BlockX < x; BlockX++)
 	{
 
@@ -85,8 +86,6 @@ void AMyProjectBlockGrid::StartGame()
 
 void AMyProjectBlockGrid::HandleTurn(int BlockIndex)
 {
-	// Increment score
-	Score++;
 
 	if (IsGameEnded) return;
 
@@ -104,13 +103,11 @@ void AMyProjectBlockGrid::HandleTurn(int BlockIndex)
 		PlayerTurnText->SetText(FText::FromString("O's Turn"));
 	}
 
-	//add to grid when handling turn
-	PrintGrid(); //get rid after build
+	
+	PrintGrid(); //Debug purposes only
+	CheckGameStalemate();
 	TCHAR winner = CheckGameEnd();
-	if (winner != ('-')) {
-		WinnerText->SetText(FString::Printf(TEXT("%s Wins!"), &winner));
-		PlayerTurnText->SetText(FText::FromString(""));
-	}
+
 }
 
 void AMyProjectBlockGrid::PrintGrid()
@@ -138,6 +135,8 @@ TCHAR AMyProjectBlockGrid::CheckLineWin(int x, int y, int z)
 TCHAR AMyProjectBlockGrid::CheckGameEnd()
 {
 	char Winner;
+
+
 	// Horizontal
 	if ((Winner = CheckLineWin(6, 7, 8)) != '-') {
 		ChangeColorOnWinGrid(6, 8, 1);
@@ -181,30 +180,53 @@ TCHAR AMyProjectBlockGrid::CheckGameEnd()
 	return '-';
 }
 
+
+void AMyProjectBlockGrid::CheckGameStalemate() {
+	for (int32 i = 0; i < BlockGrid.Num(); i++) {
+		if (BlockGrid[i]->CharPiece == '-') {
+			return;
+		}
+	}
+	IsGameEnded = true;
+	GameEndDelay();
+}
+
 void AMyProjectBlockGrid::ChangeColorOnWinGrid(int32 start, int32 end, int32 addBy)
 {
+	//change text for winner
 	IsGameEnded = true;
 	for (int32 i = start; i <= end; i+= addBy) {
 		BlockGrid[i]->ChangeColorOnWin();
 	}
-
-	FTimerHandle handle;
-	GetWorld()->GetTimerManager().SetTimer(handle, [this]() {
-		if (IsGameEnded) {
-			HandleGameEnd();
-		}
-	}, 2, 1);
-
+	GameEndDelay();
 
 }
 
 void AMyProjectBlockGrid::HandleGameEnd()
 {
+	TCHAR winner = CheckGameEnd();
+	if (winner == 'X') {
+		P2Score++;
+		XWinText->SetText(FString::Printf(TEXT("X won %d times."), P2Score));
+	}
+	else if (winner == 'O') {
+		P1Score++;
+		OWinText->SetText(FString::Printf(TEXT("O won %d times."), P1Score));
+	}
 	for (int32 i = 0; i < BlockGrid.Num(); i++) {
 		BlockGrid[i]->ResetBlock();
-		
 	}
 	IsGameEnded = false;
+}
+
+void AMyProjectBlockGrid::GameEndDelay()
+{
+	FTimerHandle handle;
+	GetWorld()->GetTimerManager().SetTimer(handle, [this]() {
+		if (IsGameEnded) {
+			HandleGameEnd();
+		}
+		}, 2, 1);
 }
 
 #undef LOCTEXT_NAMESPACE

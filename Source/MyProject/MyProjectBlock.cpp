@@ -31,6 +31,7 @@ AMyProjectBlock::AMyProjectBlock()
 	};
 	static FConstructorStatics ConstructorStatics;
 
+	//get reference to o/x piece bp
 	static ConstructorHelpers::FObjectFinder<UBlueprint> OPieceSpawnObject(TEXT("Blueprint'/Game/Puzzle/OPiece_Blueprint.OPiece_Blueprint'"));
 	static ConstructorHelpers::FObjectFinder<UBlueprint> XPieceSpawnObject(TEXT("Blueprint'/Game/Puzzle/XPiece_Blueprint.XPiece_Blueprint'"));
 
@@ -64,11 +65,9 @@ AMyProjectBlock::AMyProjectBlock()
 
 void AMyProjectBlock::SpawnOX(bool bIsO, FVector Loc, FRotator Rot)
 {
-	//todo: this is where we spawn the O or X for visibility
 	FActorSpawnParameters SpawnParams;
 
 	if (bIsO) {
-		//try to ::subclass() if not work
 		SpawnedPiece = GetWorld()->SpawnActor<AActor>(OPieceActorToSpawn, Loc, Rot, SpawnParams);
 	}
 	else {
@@ -96,12 +95,10 @@ void AMyProjectBlock::HandleClicked()
 		BlockLoc.Z += 100;
 
 		if (OwningGrid->BP1Turn) {
-			// Change material
 			SpawnOX(true, BlockLoc, BlockRot);
 			BlockMesh->SetMaterial(0, OrangeMaterial);
 		}
 		else if (OwningGrid->BP2Turn) {
-			// Change material
 			SpawnOX(false, BlockLoc, BlockRot);
 			BlockMesh->SetMaterial(0, RedMaterial);
 		}

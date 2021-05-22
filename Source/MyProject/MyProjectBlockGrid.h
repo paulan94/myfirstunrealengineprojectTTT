@@ -17,21 +17,21 @@ class AMyProjectBlockGrid : public AActor
 	UPROPERTY(Category = Grid, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class USceneComponent* DummyRoot;
 
-	/** Text component for the score */
-	UPROPERTY(Category = Grid, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UTextRenderComponent* WinnerText;
-
-	/** Text component for the score */
+	/** Text component for the player turn */
 	UPROPERTY(Category = Grid, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UTextRenderComponent* PlayerTurnText;
+
+	/** Text component for the player turn */
+	UPROPERTY(Category = Grid, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UTextRenderComponent* OWinText;
+
+	/** Text component for the player turn */
+	UPROPERTY(Category = Grid, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UTextRenderComponent* XWinText;
 
 public:
 	AMyProjectBlockGrid();
 
-	/** How many blocks have been clicked */
-	int32 Score;
-
-	//PAN CHANGE
 	int32 P1Score;
 	int32 P2Score;
 
@@ -40,7 +40,6 @@ public:
 
 	bool IsGameEnded;
 
-	//grid TODO: prob delete this
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Any)
 	TArray<AMyProjectBlock*> BlockGrid;
 
@@ -69,17 +68,19 @@ public:
 	/** Check game end */
 	TCHAR CheckGameEnd();
 
+	void CheckGameStalemate();
+
 	//pattern: 1-> horizontal, 2-> vertical, 3/4 -> diagonal patterns
 	void ChangeColorOnWinGrid(int32 start, int32 end, int32 addBy);
 
 	void HandleGameEnd();
 
+	void GameEndDelay();
+
 	void PrintGrid();
 
 	/** Returns DummyRoot subobject **/
 	FORCEINLINE class USceneComponent* GetDummyRoot() const { return DummyRoot; }
-	/** Returns ScoreText subobject **/
-	FORCEINLINE class UTextRenderComponent* GetWinnerText() const { return WinnerText; }
 
 	/** Returns PlayerTurnText subobject **/
 	FORCEINLINE class UTextRenderComponent* GetPlayerTurnText() const { return PlayerTurnText; }
