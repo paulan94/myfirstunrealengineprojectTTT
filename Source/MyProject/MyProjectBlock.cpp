@@ -57,7 +57,7 @@ AMyProjectBlock::AMyProjectBlock()
 	RedMaterial = ConstructorStatics.RedMaterial.Get();
 	GreenMaterial = ConstructorStatics.GreenMaterial.Get();
 
-	//set o and x 
+	//default char piece val
 	CharPiece = '-';
 	
 }
@@ -70,11 +70,9 @@ void AMyProjectBlock::SpawnOX(bool bIsO, FVector Loc, FRotator Rot)
 	if (bIsO) {
 		//try to ::subclass() if not work
 		SpawnedPiece = GetWorld()->SpawnActor<AActor>(OPieceActorToSpawn, Loc, Rot, SpawnParams);
-		UE_LOG(LogTemp, Warning, TEXT("Spawned O at Loc: %s Rot: %s"), *Loc.ToString(), *Rot.ToString());
 	}
 	else {
 		SpawnedPiece = GetWorld()->SpawnActor<AActor>(XPieceActorToSpawn, Loc, Rot, SpawnParams);
-		UE_LOG(LogTemp, Warning, TEXT("Spawned X at Loc: %s Rot: %s"), *Loc.ToString(), *Rot.ToString());
 	}
 }
 
@@ -135,13 +133,12 @@ void AMyProjectBlock::Highlight(bool bOn)
 }
 
 void AMyProjectBlock::ResetBlock() {
-	BlockMesh->SetMaterial(0, BaseMaterial);
+	BlockMesh->SetMaterial(0, BlueMaterial);
 	CharPiece = '-';
+	bIsActive = false;
 	if (SpawnedPiece != NULL && !SpawnedPiece->IsPendingKill()) {
 		SpawnedPiece->Destroy();
 	}
-	
-	GetWorld()->ForceGarbageCollection(true);
 }
 
 void AMyProjectBlock::ChangeColorOnWin()

@@ -32,7 +32,6 @@ AMyProjectBlockGrid::AMyProjectBlockGrid()
 
 	IsGameEnded = false;
 
-	//create grid
 }
 
 //RM this if i can
@@ -111,10 +110,6 @@ void AMyProjectBlockGrid::HandleTurn(int BlockIndex)
 	if (winner != ('-')) {
 		WinnerText->SetText(FString::Printf(TEXT("%s Wins!"), &winner));
 		PlayerTurnText->SetText(FText::FromString(""));
-		//reset game or say game end here. //also disable the text for whos turn it is.
-	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("no winner found yet"));
 	}
 }
 
@@ -188,30 +183,28 @@ TCHAR AMyProjectBlockGrid::CheckGameEnd()
 
 void AMyProjectBlockGrid::ChangeColorOnWinGrid(int32 start, int32 end, int32 addBy)
 {
+	IsGameEnded = true;
 	for (int32 i = start; i <= end; i+= addBy) {
 		BlockGrid[i]->ChangeColorOnWin();
 	}
 
-	//todo uncomment this for final vers
-	//HandleGameEnd();
+	FTimerHandle handle;
+	GetWorld()->GetTimerManager().SetTimer(handle, [this]() {
+		if (IsGameEnded) {
+			HandleGameEnd();
+		}
+	}, 2, 1);
+
 
 }
 
 void AMyProjectBlockGrid::HandleGameEnd()
 {
-	IsGameEnded = true;
-
 	for (int32 i = 0; i < BlockGrid.Num(); i++) {
 		BlockGrid[i]->ResetBlock();
 		
 	}
-	//TODO think of how to handle this
-	//set all blocks to isactive false
-	/*for (int i = 0; i < BlockGrid.Num(); i++) {
-		if (BlockGrid[i]->bIsActive) {
-			BlockGrid[i]->bIsActive = false;
-		}
-	}*/
+	IsGameEnded = false;
 }
 
 #undef LOCTEXT_NAMESPACE

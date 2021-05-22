@@ -43,9 +43,6 @@ public:
 	//grid TODO: prob delete this
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Any)
 	TArray<AMyProjectBlock*> BlockGrid;
-	//enum GridLocations {bottomLeft, bottomMid, bottomRight, midLeft, midMid, midRight, topLeft, topMid, topRight};
-
-	//END PAN CHANGE;
 
 	/** Number of blocks along each side of grid */
 	UPROPERTY(Category=Grid, EditAnywhere, BlueprintReadOnly)
