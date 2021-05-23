@@ -12,7 +12,6 @@ Creating a TicTacToe game in Unreal Engine 4
 
 This is my first attempt in creating a project in UE4 written in C++ via Visual Studio. This a recreation of the classic game, and the user clicks a block to place their piece. There is no AI implementation in this simplified version. The focus was spent in learning the fundamentals of UE4 coming from a Unity background. The game immediately starts on run, and there the flow of the game is dictated by the text elements that appear during gameplay. A scoreboard is shown to maintain score upon a first non-stalemate victory.
 
-
 ### Dependencies
 
 * Unreal Engine 4
@@ -35,3 +34,9 @@ Paul An
 Inspiration, code snippets, etc.
 * [awesome-readme](https://github.com/matiassingers/awesome-readme)
 * [TicTacToe Algorithm](https://stackoverflow.com/questions/31932459/c-shortest-win-checking-function-for-tic-tac-toe)
+
+### More Details
+
+- Time spent: 10~ hours.
+- A big challenge I faced was dealing with pointers and sifting through log files for when crashes occured.
+
