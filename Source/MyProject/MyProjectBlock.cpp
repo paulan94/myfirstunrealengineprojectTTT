@@ -32,11 +32,24 @@ AMyProjectBlock::AMyProjectBlock()
 	static FConstructorStatics ConstructorStatics;
 
 	//get reference to o/x piece bp
-	static ConstructorHelpers::FObjectFinder<UBlueprint> OPieceSpawnObject(TEXT("Blueprint'/Game/Puzzle/OPiece_Blueprint.OPiece_Blueprint'"));
-	static ConstructorHelpers::FObjectFinder<UBlueprint> XPieceSpawnObject(TEXT("Blueprint'/Game/Puzzle/XPiece_Blueprint.XPiece_Blueprint'"));
+	static ConstructorHelpers::FObjectFinder<UClass> OPieceSpawnObject(TEXT("Class'/Game/Puzzle/OPiece_Blueprint.OPiece_Blueprint_C'"));
+	static ConstructorHelpers::FObjectFinder<UClass> XPieceSpawnObject(TEXT("Class'/Game/Puzzle/XPiece_Blueprint.XPiece_Blueprint_C'"));
 
-	OPieceActorToSpawn = (UClass*)OPieceSpawnObject.Object->GeneratedClass;
-	XPieceActorToSpawn = (UClass*)XPieceSpawnObject.Object->GeneratedClass;
+	/*static ConstructorHelpers::FObjectFinder<UClass> bpClassFinder(TEXT("Class'/Game/dice/D4_Dice_BP.D4_Dice_BP_C'"));
+	if (bpClassFinder.Object)
+	{
+		UClass* bpClass = bpClassFinder.Object;
+	}*/
+
+	if (OPieceSpawnObject.Object)
+	{
+		OPieceActorToSpawn = (UClass*)OPieceSpawnObject.Object;
+	}
+
+	if (XPieceSpawnObject.Object)
+	{
+		XPieceActorToSpawn = (UClass*)XPieceSpawnObject.Object;
+	}
 
 	// Create dummy root scene component
 	DummyRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Dummy0"));
